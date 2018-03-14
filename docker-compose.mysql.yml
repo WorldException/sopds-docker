@@ -1,0 +1,52 @@
+version: "2"
+services:
+  db:
+    image: mariadb:10.3.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=sopds
+      - MYSQL_DATABASE=sopds
+      - MYSQL_USER=sopds
+      - MYSQL_PASSWORD=sopds
+    volumes:
+      - db-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  server:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: sopds:master
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=sopds
+      - MYSQL_USER=sopds
+      - MYSQL_PASSWORD=sopds
+    links:
+      - db:db
+    depends_on:
+      - db
+    ports:
+      - 8001:8001
+    volumes:
+      - "../books:/books"
+  scaner:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: sopds:master
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=sopds
+      - MYSQL_USER=sopds
+      - MYSQL_PASSWORD=sopds
+    links:
+      - db:db
+    depends_on:
+      - db
+    volumes:
+      - "../books:/books"
+    command: scaner
+volumes:
+  db-data:
+  pg-data:
+  pg-run:
+  pg-admin:

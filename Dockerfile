@@ -1,10 +1,10 @@
 FROM python:3.6-jessie
 
-LABEL author="Dmitry Shelepnev admin@sopds.ru"
-LABEL devops="Evgeny Stoyanov quick.es@gmail.com"
-LABEL name="SOPDS books catalog"
-LABEL url="https://github.com/mitshel/sopds"
-LABEL version="master"
+LABEL   author="Dmitry Shelepnev admin@sopds.ru" \
+        devops="Evgeny Stoyanov quick.es@gmail.com" \
+        name="SOPDS books catalog" \
+        url="https://github.com/mitshel/sopds" \
+        version="master" 
 
 ENV SOPDS_DIR="/opt/sopds-master" \
     SOPDS_LANG='ru-RU' \
@@ -19,8 +19,8 @@ RUN chmod +x ${SOPDS_DIR}/entrypoint.sh \
     && apt install -y mysql-client unzip \
     && wget -nv https://github.com/mitshel/sopds/archive/master.zip \
     && unzip master.zip -d /opt \
-    && pip install mysqlclient \
-    && pip install -r ${SOPDS_DIR}/requirements.txt
+    && pip3 install mysqlclient psycopg2-binary \
+    && pip3 install -r ${SOPDS_DIR}/requirements.txt
 
 COPY settings.py ${SOPDS_DIR}/sopds/settings.py
 

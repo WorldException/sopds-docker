@@ -103,6 +103,17 @@ if os.getenv('MYSQL_DATABASE'):
             }
         }
     }
+elif os.getenv('POSTGRES_DB'):
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB','sopds'),
+        'HOST': os.getenv('POSTGRES_HOST','db'),
+        'USER': os.getenv('POSTGRES_USER','sopds'),
+        'PASSWORD' : os.getenv('POSTGRES_PASSWORD','sopds'),
+        'PORT': '', # Set to empty string for default.
+        }
+    }
 else:
     DATABASES = {
         'default': {
@@ -110,16 +121,7 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }         
     }
-#DATABASES = {
-#    'default': {
-#    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#    'NAME': 'sopds',
-#    'USER': 'sopds',
-#    'PASSWORD': 'sopds',
-#    'HOST': '', # Set to empty string for localhost.
-#    'PORT': '', # Set to empty string for default.
-#    }
-#}
+
 
 
 

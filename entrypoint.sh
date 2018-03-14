@@ -35,8 +35,13 @@ server)
     fi
     python3 manage.py sopds_server start
     ;;
-scan)
+scaner)
     python3 manage.py sopds_scanner start
+    ;;
+log)
+    tail -f \
+        $(python3 manage.py sopds_util getconf SOPDS_SERVER_LOG) \
+        $(python3 manage.py sopds_util getconf SOPDS_SCANNER_LOG)
     ;;
 *)
     "$@"

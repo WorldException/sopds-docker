@@ -1,7 +1,6 @@
 version: "2"
 services:
   pg:
-    restart: always
     image: postgres:10.3
     environment:
       - DEBUG=false
@@ -20,20 +19,32 @@ services:
       -c autovacuum=on
       -c synchronous_commit=off
       -c commit_delay=1000
+  pgadmin:
+    image: fenglc/pgadmin4:latest
+    ports:
+      - 5050:5050
+    links:
+      - pg:pg
+    environment:
+      - DEFAULT_USER=admin
+      - DEFAULT_PASSWORD=admin
+    volumes:
+      - pg-admin:/var/lib/pgadmin
   server:
-    restart: always
     build: 
       context: .
       dockerfile: Dockerfile
-    image: quickes/sopds-docker:latest
+    image: sopds:master
     environment:
       - POSTGRES_DB=sopds
       - POSTGRES_USER=sopds
       - POSTGRES_PASSWORD=sopds
       - POSTGRES_HOST=pg
     links:
+      - db:db
       - pg:pg
     depends_on:
+      - db
       - pg
     ports:
       - 8001:8001
@@ -43,15 +54,17 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    image: quickes/sopds-docker:latest
+    image: sopds:master
     environment:
       - POSTGRES_DB=sopds
       - POSTGRES_USER=sopds
       - POSTGRES_PASSWORD=sopds
       - POSTGRES_HOST=pg
     links:
+      - db:db
       - pg:pg
     depends_on:
+      - db
       - pg
     volumes:
       - "../books:/books"
