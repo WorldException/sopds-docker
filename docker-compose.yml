@@ -22,9 +22,6 @@ services:
       -c commit_delay=1000
   server:
     restart: always
-    build: 
-      context: .
-      dockerfile: Dockerfile
     image: quickes/sopds-docker:latest
     environment:
       - POSTGRES_DB=sopds
@@ -41,9 +38,6 @@ services:
       - "../books:/books"
   scaner:
     restart: always
-    build: 
-      context: .
-      dockerfile: Dockerfile
     image: quickes/sopds-docker:latest
     environment:
       - POSTGRES_DB=sopds
