@@ -40,6 +40,7 @@ services:
     volumes:
       - "../books:/books"
   scaner:
+    restart: always
     build: 
       context: .
       dockerfile: Dockerfile
@@ -59,4 +60,3 @@ services:
 volumes:
   pg-data:
   pg-run:
-  pg-admin:
