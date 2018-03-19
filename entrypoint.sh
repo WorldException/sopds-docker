@@ -4,10 +4,20 @@ set -e
 
 
 function init_settings(){
+    books_path=$(python3 manage.py sopds_util getconf SOPDS_ROOT_LIB)
+    echo "books path ${books_path}"
+    if [[ "${books_path}" == "/books" ]]; then
+        echo "database exist, exit"
+        return 1
+    fi
     python3 manage.py migrate
     python3 manage.py sopds_util clear
+    #python3 manage.py sopds_util load_mygenres
+    #python3 manage.py sopds_util pg_optimize
+    #python3 manage.py loaddata genre.json --app opds_catalog
     #python3 manage.py createsuperuser
-    python3 -c "import os
+    python3 -c "
+import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sopds.settings'
 import django
 django.setup()
@@ -20,8 +30,9 @@ else:
     print('Super user created...')"
     python3 manage.py sopds_util setconf SOPDS_ROOT_LIB '/books'
     python3 manage.py sopds_util setconf SOPDS_LANGUAGE ${SOPDS_LANG}
-    python3 manage.py sopds_util setconf SOPDS_SCAN_START_DIRECTLY True
+    #python3 manage.py sopds_util setconf SOPDS_SCAN_START_DIRECTLY False
     touch inited.flag
+    return 0
 }
 
 case "$1" in
@@ -35,7 +46,7 @@ server)
     fi
     python3 manage.py sopds_server start
     ;;
-scaner)
+scanner)
     python3 manage.py sopds_scanner start
     ;;
 log)

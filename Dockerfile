@@ -22,7 +22,7 @@ RUN chmod +x ${SOPDS_DIR}/entrypoint.sh \
     && pip3 install mysqlclient psycopg2-binary \
     && pip3 install -r ${SOPDS_DIR}/requirements.txt
 
-COPY settings.py ${SOPDS_DIR}/sopds/settings.py
+#COPY settings.py ${SOPDS_DIR}/sopds/settings.py
 
 WORKDIR ${SOPDS_DIR}
 ENTRYPOINT [ "./entrypoint.sh" ]
