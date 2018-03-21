@@ -22,7 +22,7 @@ services:
       -c commit_delay=1000
   server:
     restart: always
-    image: quickes/sopds-docker:latest
+    image: quickes/sopds-docker:0.45
     environment:
       - POSTGRES_DB=sopds
       - POSTGRES_USER=sopds
@@ -38,7 +38,7 @@ services:
       - "../books:/books"
   scanner:
     restart: always
-    image: quickes/sopds-docker:latest
+    image: quickes/sopds-docker:0.45
     environment:
       - POSTGRES_DB=sopds
       - POSTGRES_USER=sopds

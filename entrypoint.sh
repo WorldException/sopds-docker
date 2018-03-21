@@ -2,10 +2,6 @@
 
 set -e 
 
-if [ ! -d /opds ]; then
-    mkdir /opds
-fi
-
 function init_settings(){
     books_path=$(python3 manage.py sopds_util getconf SOPDS_ROOT_LIB)
     echo "books path ${books_path}"
@@ -34,15 +30,15 @@ else:
     python3 manage.py sopds_util setconf SOPDS_ROOT_LIB '/books'
     python3 manage.py sopds_util setconf SOPDS_LANGUAGE ${SOPDS_LANG}
     #python3 manage.py sopds_util setconf SOPDS_SCAN_START_DIRECTLY False
-    touch /opds/inited.flag
+    touch ${SOPDS_DATA}/inited.flag
     return 0
 }
 
 case "$1" in
 server)
-    if [ ! -f /opds/inited.flag ]; then
+    if [ ! -f ${SOPDS_DATA}/inited.flag ]; then
         echo 'wait mysql init'
-        #wait mysql
+        #wait database
         sleep 10
         echo 'first init ...'
         init_settings
@@ -50,7 +46,10 @@ server)
     python3 manage.py sopds_server start
     ;;
 scanner)
-    python3 manage.py sopds_scanner start
+    # wait migrate
+    sleep 20
+    echo "start scanner"
+    python3 manage.py sopds_scanner start --verbose
     ;;
 log)
     tail -f \
