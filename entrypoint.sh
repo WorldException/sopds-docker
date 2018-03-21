@@ -2,14 +2,17 @@
 
 set -e 
 
+if [ ! -d /opds ]; then
+    mkdir /opds
+fi
 
 function init_settings(){
     books_path=$(python3 manage.py sopds_util getconf SOPDS_ROOT_LIB)
     echo "books path ${books_path}"
-    if [[ "${books_path}" == "/books" ]]; then
-        echo "database exist, exit"
-        return 1
-    fi
+    #if [[ "${books_path}" == "/books" ]]; then
+    #    echo "database exist, exit"
+    #    return 1
+    #fi
     python3 manage.py migrate
     python3 manage.py sopds_util clear
     #python3 manage.py sopds_util load_mygenres
@@ -31,13 +34,13 @@ else:
     python3 manage.py sopds_util setconf SOPDS_ROOT_LIB '/books'
     python3 manage.py sopds_util setconf SOPDS_LANGUAGE ${SOPDS_LANG}
     #python3 manage.py sopds_util setconf SOPDS_SCAN_START_DIRECTLY False
-    touch inited.flag
+    touch /opds/inited.flag
     return 0
 }
 
 case "$1" in
 server)
-    if [ ! -f inited.flag ]; then
+    if [ ! -f /opds/inited.flag ]; then
         echo 'wait mysql init'
         #wait mysql
         sleep 10

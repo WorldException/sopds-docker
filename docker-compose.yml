@@ -48,6 +48,7 @@ services:
       - pg:pg
     depends_on:
       - pg
+      - server
     volumes:
       - "../books:/books"
     command: scanner

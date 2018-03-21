@@ -23,7 +23,7 @@ RUN chmod +x ${SOPDS_DIR}/entrypoint.sh \
     && pip3 install -r ${SOPDS_DIR}/requirements.txt
 
 #COPY settings.py ${SOPDS_DIR}/sopds/settings.py
-
+VOLUME /opds
 WORKDIR ${SOPDS_DIR}
 ENTRYPOINT [ "./entrypoint.sh" ]
 CMD [ "server" ]
