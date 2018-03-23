@@ -11,13 +11,14 @@ ENV SOPDS_DIR="/opt/sopds" \
     SOPDS_USER='admin' \
     SOPDS_PASSWORD='admin' \
     SOPDS_EMAIL='user@user.user' \
-    SOPDS_DATA='/opt/data'
+    SOPDS_DATA='/opt/data' \
+    DJANGO_SETTINGS_MODULE="sopds.settings"
 
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh \
     && apt update \
-    && apt install -y mysql-client unzip \
+    && apt install -y mysql-client unzip sqlite3 \
     && wget -nv -O /opt/sopds.zip https://github.com/mitshel/sopds/archive/v0.45.zip \
     && unzip /opt/sopds.zip -d /opt \
     && mv /opt/sopds-0.45 ${SOPDS_DIR} \
@@ -26,7 +27,7 @@ RUN chmod +x /entrypoint.sh \
     && pip3 install mysqlclient psycopg2-binary \
     && pip3 install -r /opt/sopds/requirements.txt
 
-#COPY settings.py ${SOPDS_DIR}/sopds/settings.py
+COPY settings.py ${SOPDS_DIR}/sopds/settings.py
 VOLUME ${SOPDS_DATA}
 WORKDIR ${SOPDS_DIR}
 ENTRYPOINT [ "/entrypoint.sh" ]
